@@ -12,7 +12,7 @@ const app = express();
 // Middleware for parsing JSON and URL-encoded data
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({credentials:true , origin:"http://localhost:3000"}));
+app.use(cors({credentials:true , origin:"https://bharatblog.netlify.app"}));
 app.use(upload())
 app.use('/uploads' , express.static(__dirname + '/uploads'))
 
