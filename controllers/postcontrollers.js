@@ -16,8 +16,8 @@ const createPost = async (req, res, next) => {
         }
         const { thumbnail } = req.files;
         // Check file size
-        if (thumbnail.size > 2000000) {
-            return next(new HttpError("Thumbnail is too big. File should be less than 2mb"));
+        if (thumbnail.size > 7000000) {
+            return next(new HttpError("Image is too big. File should be less than 7mb"));
         }
         let filename = thumbnail.name;
         let splittedfilename = filename.split('.');
@@ -104,8 +104,10 @@ const editPost = async (req, res, next) => {
     try {
         const postId = req.params.id;
         let { title, category, description } = req.body;
-        if (!title || !category || description.length < 12) {
-            return next(new HttpError("Fill in all the fields", 422));
+
+        // Check if description exists
+        if (!title || !category || !description || description.length < 12) {
+            return next(new HttpError("Fill in all the fields and ensure description is at least 12 characters long", 422));
         }
 
         let updatedPost;
@@ -118,8 +120,16 @@ const editPost = async (req, res, next) => {
                 return next(new HttpError("Post not found", 404));
             }
 
-            // Delete old thumbnail
-            fs.unlinkSync(path.join(__dirname, '..', 'uploads', oldPost.thumbnail));
+            // Check if thumbnail exists
+            if (oldPost.thumbnail) {
+                // Delete old thumbnail
+                try {
+                    fs.unlinkSync(path.join(__dirname, '..', 'uploads', oldPost.thumbnail));
+                } catch (err) {
+                    console.error("Error deleting old thumbnail:", err);
+                    // Handle the error or log it as per your requirement
+                }
+            }
 
             // Upload new thumbnail
             const { thumbnail } = req.files;
