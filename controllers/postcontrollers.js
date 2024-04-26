@@ -133,8 +133,8 @@ const editPost = async (req, res, next) => {
 
             // Upload new thumbnail
             const { thumbnail } = req.files;
-            if (thumbnail.size > 2000000) {
-                return next(new HttpError("Thumbnail is too big. File size must be less than 2mb", 422));
+            if (thumbnail.size > 7000000) {
+                return next(new HttpError("Thumbnail is too big. File size must be less than 7mb", 422));
             }
             let fileName = thumbnail.name;
             let splittedFileName = fileName.split('.');
